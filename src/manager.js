@@ -8,6 +8,8 @@ let OBJECT = require("./datatypes/Object");
 let TAGS = require("./datatypes/Tags");
 let TEXT = require("./datatypes/Text");
 let TIME = require("./datatypes/Time");
+const { makeMigration } = require("./migrations/makemigration");
+const { runMigrations } = require("./migrations/runmigration");
 
 let collectionManager = {};
 
@@ -22,6 +24,33 @@ collectionManager.addWeblancerDataTypes = (Sequelize) => {
     TAGS.define(Sequelize);
     TEXT.define(Sequelize);
     TIME.define(Sequelize);
+}
+
+collectionManager.resolveMigrations = async (sequelize) => {
+    let newName = new Date().getTime();
+
+    const configs = await sequelize.query("SELECT * FROM configs Where key = 'migrationRevision'", 
+        { type: QueryTypes.SELECT });
+
+    console.log("configs", configs);
+    let fromRev = configs[0]? JSON.parse(configs[0].value).value : 0;
+
+    if (!sequelize) {
+        console.log("No sequelize found");
+        return false;
+    }
+
+    await makeMigration(newName, sequelize);
+
+    let lastRevisition = await runMigrations(sequelize, fromRev);
+
+    await sequelize.query(`UPDATE configs SET value = '${
+        JSON.stringify({value: lastRevisition + 1})
+    }' WHERE key = 'migrationRevision'`);
+
+    await sequelize.query(`INSERT INTO configs (key, value) SELECT 'migrationRevision', '${
+        JSON.stringify({value: lastRevisition + 1})
+    }' WHERE NOT EXISTS (SELECT 1 FROM configs WHERE key='migrationRevision')`);
 }
 
 module.exports = collectionManager;

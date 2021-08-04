@@ -2,8 +2,10 @@ const { Client } = require('pg')
 const Sequelize = require('sequelize');
 const { QueryTypes } = require('sequelize');
 const define = require('./define');
+const { resolveMigrations } = require('./manager');
 const collectionManager = require('./manager');
 const Collection = require('./schema/collection');
+const Config = require('./schema/config');
 const {DataTypes} = Sequelize;
 
 collectionManager.addWeblancerDataTypes(Sequelize);
@@ -60,6 +62,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
 
     _models = {
         collection: Collection(_sequelize, DataTypes),
+        config: Config(_sequelize, DataTypes),
         ...modelMap
     };
 
@@ -76,6 +79,8 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
 
     await _sequelize.sync({
     })
+
+    await resolveMigrations(_sequelize);
 
     return {models: _models, sequelize: _sequelize};
 }
