@@ -17,7 +17,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     await pgClient.connect();
 
     const res = await pgClient
-        .query(`SELECT 'CREATE DATABASE ${dbName}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${dbName}')`)
+        .query(`SELECT 'CREATE DATABASE ${dbName}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${dbName}');`)
     
     console.log(res.rows[0].message) // Hello world!
     await pgClient.end();
