@@ -34,7 +34,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
         { type: QueryTypes.SELECT });
 
     console.log("configs", configs);
-    let fromRev = configs[0]? JSON.parse(configs[0].value).value : 0;
+    let fromRev = configs[0]? configs[0].value.value : 0;
 
     if (!sequelize) {
         console.log("No sequelize found");

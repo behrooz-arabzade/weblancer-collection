@@ -29,11 +29,13 @@ const Collection = (sequelize, DataTypes) => {
         },
         createdAt: {
             type: DataTypes.DATE,
-            defaultValue: Sequelize.fn('NOW')
+            allowNull: false,
+            defaultValue: Sequelize.NOW
         },
         updatedAt: {
             type: DataTypes.DATE,
-            defaultValue: Sequelize.fn('NOW')
+            allowNull: false,
+            defaultValue: Sequelize.NOW
         }
     });
     
