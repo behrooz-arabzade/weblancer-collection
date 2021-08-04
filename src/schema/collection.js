@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 const Collection = (sequelize, DataTypes) => {
     const Collection = sequelize.define('collection', {
         id: {
@@ -27,11 +29,11 @@ const Collection = (sequelize, DataTypes) => {
         },
         createdAt: {
             type: DataTypes.DATE,
-            defaultValue: sequelize.literal('NOW()')
+            defaultValue: Sequelize.fn('NOW')
         },
         updatedAt: {
             type: DataTypes.DATE,
-            defaultValue: sequelize.literal('NOW()')
+            defaultValue: Sequelize.fn('NOW')
         }
     });
     
