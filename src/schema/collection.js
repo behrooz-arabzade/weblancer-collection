@@ -24,10 +24,7 @@ const Collection = (sequelize, DataTypes) => {
         },
         relations: {
             type: DataTypes.JSON
-        },
-        test: {
-            type: DataTypes.JSONB
-        },
+        }
     });
     
     return Collection;
