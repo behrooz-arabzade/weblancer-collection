@@ -1,0 +1,22 @@
+{
+  "name": "weblancer-collection",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/behroozkhan/weblancer-collection.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/behroozkhan/weblancer-collection/issues"
+  },
+  "homepage": "https://github.com/behroozkhan/weblancer-collection#readme",
+  "dependencies": {
+    "sequelize": "^6.6.5"
+  }
+}
