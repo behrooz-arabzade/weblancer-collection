@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 const Config = (sequelize, DataTypes) => {
     const Config = sequelize.define('config', {
         id: {
@@ -14,6 +16,14 @@ const Config = (sequelize, DataTypes) => {
             type: DataTypes.JSON,
             defaultValue: {}
         },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: Sequelize.fn('NOW')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: Sequelize.fn('NOW')
+        }
     });
     
     return Config;
