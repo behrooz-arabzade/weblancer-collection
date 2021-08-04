@@ -69,7 +69,7 @@ migrationTools.runMigrations = async (sequelize, fromRevision = 0, fromPos = 0, 
         console.log("\t"+file);
     });
 
-    let lastRev = fromRevision;
+    let lastRev = fromRevision - 1;
     for (const file of migrationFiles) {
         console.log("Execute migration from file: "+file);
         let success = await migrate.executeMigration(queryInterface, path.join(migrationsDir, file), !noTransaction, fromPos, rollback);

@@ -24,6 +24,14 @@ const Collection = (sequelize, DataTypes) => {
         },
         relations: {
             type: DataTypes.JSON
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('NOW()')
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: sequelize.literal('NOW()')
         }
     });
     
