@@ -36,7 +36,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
         }
     })
 
-    console.log("configs", configs);
+    console.log("config", config);
     let fromRev = config? config.value.value : 0;
 
     if (!sequelize) {
