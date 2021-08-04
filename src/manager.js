@@ -30,11 +30,14 @@ collectionManager.addWeblancerDataTypes = (Sequelize) => {
 collectionManager.resolveMigrations = async (sequelize) => {
     let newName = new Date().getTime().toString();
 
-    const configs = await sequelize.query("SELECT * FROM configs Where key = 'migrationRevision'", 
-        { type: QueryTypes.SELECT });
+    let config = await sequelize.models.config.findOne({
+        where: {
+            key: "migrationRevision"
+        }
+    })
 
     console.log("configs", configs);
-    let fromRev = configs[0]? configs[0].value.value : 0;
+    let fromRev = config? config.value.value : 0;
 
     if (!sequelize) {
         console.log("No sequelize found");

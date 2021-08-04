@@ -27,15 +27,15 @@ const Collection = (sequelize, DataTypes) => {
         relations: {
             type: DataTypes.JSON
         },
-        created_at: {
-            type: 'TIMESTAMP',
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.NOW
         },
-        updated_at: {
-            type: 'TIMESTAMP',
-            defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-            allowNull: false
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Sequelize.NOW
         }
     });
     
