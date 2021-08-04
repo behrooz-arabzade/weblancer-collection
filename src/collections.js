@@ -22,7 +22,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     const isDbExist = async () => {
         let res = await pgClient.query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
         console.log("initCollections 0", res.rowCount)
-        return rowCount > 0;
+        return res.rowCount > 0;
     }
 
     if (!await isDbExist()) {
