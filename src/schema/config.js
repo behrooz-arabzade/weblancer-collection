@@ -19,12 +19,12 @@ const Config = (sequelize, DataTypes) => {
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: Sequelize.NOW
+            defaultValue: Sequelize.fn('NOW')
         },
         updatedAt: {
             type: DataTypes.DATE,
             allowNull: false,
-            defaultValue: Sequelize.NOW
+            defaultValue: Sequelize.fn('NOW')
         }
     });
     
