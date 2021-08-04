@@ -12,7 +12,6 @@ const Collection = (sequelize, DataTypes) => {
         },
         displayName: {
             type: DataTypes.STRING,
-            unique: true,
         },
         description: {
             type: DataTypes.STRING
