@@ -64,12 +64,14 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
         modelMap[collection.name] = 
             define(_sequelize, collection.name, collection.schema, collection.relation); 
     }
+    console.log("initCollections 004")
 
     _models = {
         collection: Collection(_sequelize, DataTypes),
         config: Config(_sequelize, DataTypes),
         ...modelMap
     };
+    console.log("initCollections 005")
 
     console.log("initCollections 1")
     // Resolving assosiations

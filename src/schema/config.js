@@ -17,7 +17,7 @@ const Config = (sequelize, DataTypes) => {
             defaultValue: {}
         },
         test: {
-            type: DataTypes.String,
+            type: DataTypes.STRING,
         }
     });
     
