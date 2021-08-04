@@ -20,6 +20,8 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
 
     // Creating db if not exist
     const isDbExist = async () => {
+        console.log("initCollections 0", await pgClient
+        .query(`SELECT FROM pg_database WHERE datname = '${dbName}'`))
         return await pgClient
         .query(`SELECT FROM pg_database WHERE datname = '${dbName}'`).rowCount > 0;
     }
