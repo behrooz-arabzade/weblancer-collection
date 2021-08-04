@@ -17,8 +17,7 @@ const Config = (sequelize, DataTypes) => {
             defaultValue: {}
         },
         test: {
-            type: DataTypes.STRING,
-            unique: true
+            type: DataTypes.STRING
         }
     });
     
