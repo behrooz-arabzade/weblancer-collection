@@ -16,10 +16,16 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     const pgClient = new Client();
     await pgClient.connect();
 
-    const res = await pgClient
+    let res = await pgClient
         .query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
+
+    if (res.rowCount === 0) {
+        res = await pgClient
+            .query(`CREATE DATABASE ${dbName}`);
+        
+        console.log(res);
+    }
     
-    console.log(res) // Hello world!
     await pgClient.end();
 
     _sequelize = new Sequelize(
