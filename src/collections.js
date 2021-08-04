@@ -4,13 +4,12 @@ const { QueryTypes } = require('sequelize');
 const define = require('./define');
 const collectionManager = require('./manager');
 const Collection = require('./schema/collection');
+const {DataTypes} = Sequelize;
 
 collectionManager.addWeblancerDataTypes(Sequelize);
 
 let _sequelize;
 let _models;
-
-
 
 async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     dbName = dbName.toLowerCase();
