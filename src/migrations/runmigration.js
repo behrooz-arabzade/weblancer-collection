@@ -3,8 +3,8 @@
 const path              = require("path");
 const fs                = require("fs");
 
-const migrate           = require("../lib/migrate");
-const pathConfig = require('../lib/pathconfig');
+const migrate           = require("./lib/migrate");
+const pathConfig = require('./lib/pathconfig');
 
 let migrationTools = {};
 
