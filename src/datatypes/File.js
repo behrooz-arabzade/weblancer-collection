@@ -3,7 +3,7 @@ const {DataTypes} = Sequelize;
 
 let type;
 
-module.export.define = function define(Sequelize) {
+module.exports.define = function define(Sequelize) {
     class FILE extends DataTypes.ABSTRACT {
         toSql() {
             return 'JSONB';
@@ -66,4 +66,4 @@ module.export.define = function define(Sequelize) {
     type = DataTypes.FILE;
 }
 
-module.export.FILE = type;
+module.exports.FILE = type;

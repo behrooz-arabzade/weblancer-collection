@@ -1,7 +1,7 @@
 let Sequelize = require('sequelize');
 const {DataTypes} = Sequelize;
 
-module.export.define = function define(Sequelize) {
+module.exports.define = function define(Sequelize) {
 }
 
-module.export.OBJECT = DataTypes.JSON;
+module.exports.OBJECT = DataTypes.JSON;
