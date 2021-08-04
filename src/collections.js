@@ -25,7 +25,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     }
 
     if (!await isDbExist()) {
-        console.log("initCollections 1")
+        console.log("initCollections 1", await isDbExist())
         res = await pgClient
             .query(`CREATE DATABASE ${dbName}`);
     }
