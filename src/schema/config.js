@@ -15,6 +15,9 @@ const Config = (sequelize, DataTypes) => {
         value: {
             type: DataTypes.JSON,
             defaultValue: {}
+        },
+        test: {
+            type: DataTypes.String,
         }
     });
     
