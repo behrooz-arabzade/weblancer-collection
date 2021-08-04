@@ -34,7 +34,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
         where: {
             key: "migrationRevision"
         },
-        attributes: ["key", "value"]
+        attributes: ["id", "key", "value"]
     })
 
     console.log("config", config);
