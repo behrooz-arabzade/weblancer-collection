@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/behroozkhan/weblancer-collection#readme",
   "dependencies": {
+    "pg": "^8.7.1",
     "sequelize": "^6.6.5"
   }
 }

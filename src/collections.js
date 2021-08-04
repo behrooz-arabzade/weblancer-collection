@@ -1,3 +1,4 @@
+const { Client } = require('pg')
 const Sequelize = require('sequelize');
 const { QueryTypes } = require('sequelize');
 const define = require('./define');
@@ -9,7 +10,18 @@ collectionManager.addWeblancerDataTypes(Sequelize);
 let _sequelize;
 let _models;
 
+
+
 async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
+    const pgClient = new Client();
+    await pgClient.connect();
+
+    const res = await client
+        .query(`SELECT 'CREATE DATABASE ${dbName}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${dbName}')\gexec`)
+    
+    console.log(res.rows[0].message) // Hello world!
+    await client.end();
+
     _sequelize = new Sequelize(
         dbName,
         dbUser,
