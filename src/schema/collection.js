@@ -26,16 +26,6 @@ const Collection = (sequelize, DataTypes) => {
         },
         relations: {
             type: DataTypes.JSON
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.fn('NOW')
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.fn('NOW')
         }
     });
     

@@ -15,16 +15,6 @@ const Config = (sequelize, DataTypes) => {
         value: {
             type: DataTypes.JSON,
             defaultValue: {}
-        },
-        createdAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.fn('NOW')
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: Sequelize.fn('NOW')
         }
     });
     
