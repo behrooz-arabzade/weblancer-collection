@@ -18,15 +18,26 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     const pgClient = new Client();
     await pgClient.connect();
 
-    let res = await pgClient
-        .query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
+    const isDbExist = async () => {
+        return await pgClient
+        .query(`SELECT FROM pg_database WHERE datname = '${dbName}'`).rowCount > 0;
+    }
 
-    if (res.rowCount === 0) {
+    if (!await isDbExist()) {
         res = await pgClient
             .query(`CREATE DATABASE ${dbName}`);
         
         console.log(res);
     }
+
+    // let tryTime = 0;
+    // while(tryTime < 20) {
+    //     if (await isDbExist())
+    //         break;
+    // }
+
+    // if (!await isDbExist())
+    //     throw new Error("DB is not created yet");
     
     await pgClient.end();
 
