@@ -18,28 +18,20 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     const pgClient = new Client();
     await pgClient.connect();
 
+    // Creating db if not exist
     const isDbExist = async () => {
         return await pgClient
         .query(`SELECT FROM pg_database WHERE datname = '${dbName}'`).rowCount > 0;
     }
 
     if (!await isDbExist()) {
+        console.log("initCollections 1")
         res = await pgClient
             .query(`CREATE DATABASE ${dbName}`);
-        
-        console.log(res);
     }
-
-    // let tryTime = 0;
-    // while(tryTime < 20) {
-    //     if (await isDbExist())
-    //         break;
-    // }
-
-    // if (!await isDbExist())
-    //     throw new Error("DB is not created yet");
     
     await pgClient.end();
+    // Creating db if not exist
 
     _sequelize = new Sequelize(
         dbName,
