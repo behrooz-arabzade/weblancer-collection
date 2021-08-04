@@ -18,6 +18,7 @@ const Config = (sequelize, DataTypes) => {
         },
         test: {
             type: DataTypes.STRING,
+            unique: true
         }
     });
     
