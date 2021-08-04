@@ -66,6 +66,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
         ...modelMap
     };
 
+    console.log("initCollections 1")
     // Resolving assosiations
     let allModels = {};
     Object.values(_models).forEach(model => {
@@ -77,11 +78,14 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     });
     // Resolving assosiations
 
+    console.log("initCollections 2")
     await _sequelize.sync({
     })
 
+    console.log("initCollections 3")
     await resolveMigrations(_sequelize);
 
+    console.log("initCollections 4")
     return {models: _models, sequelize: _sequelize};
 }
 
