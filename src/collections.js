@@ -13,6 +13,8 @@ let _models;
 
 
 async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
+    dbName = dbName.toLowerCase();
+    
     const pgClient = new Client();
     await pgClient.connect();
 
