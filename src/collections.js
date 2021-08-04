@@ -14,7 +14,7 @@ let _models;
 
 async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     dbName = dbName.toLowerCase();
-    
+
     const pgClient = new Client();
     await pgClient.connect();
 
@@ -40,7 +40,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
         },
     );
 
-    let query = "SELECT * FROM collections WHERE";
+    let query = "SELECT * FROM collections";
     if (groupId) {
         query = `${query} WHERE groupId = '${groupId}'`
     }
