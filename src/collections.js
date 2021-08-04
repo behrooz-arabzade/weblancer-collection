@@ -47,10 +47,11 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
         query = `${query} WHERE groupId = '${groupId}'`
     }
 
-    const allCollections = await _sequelize
-        .query(`${query};`, { type: QueryTypes.SELECT });
-
-    console.log("initCollections 1", allCollections)
+    let allCollections = [];
+    try {
+        allCollections = await _sequelize
+            .query(`${query};`, { type: QueryTypes.SELECT });
+    } catch {}
 
     let modelMap = {};
     for(const collection of allCollections) {
