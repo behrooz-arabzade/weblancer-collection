@@ -91,6 +91,8 @@ migrationTools.makeMigration = async (name, sequelize) =>
                    '');
     
     console.log(`New migration to revision ${currentState.revision} has been saved to file '${info.filename}'`);
+
+    return true;
 }
 
 module.exports = migrationTools;
