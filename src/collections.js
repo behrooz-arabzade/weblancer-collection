@@ -21,12 +21,10 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     // Creating db if not exist
     const isDbExist = async () => {
         let res = await pgClient.query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
-        console.log("initCollections 0", res.rowCount)
         return res.rowCount > 0;
     }
 
     if (!await isDbExist()) {
-        console.log("initCollections 1", await isDbExist())
         await pgClient
             .query(`CREATE DATABASE ${dbName}`);
     }
@@ -43,7 +41,7 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
             dialect: 'postgres',
         },
     );
-
+    console.log("initCollections 0")
     let query = "SELECT * FROM collections";
     if (groupId) {
         query = `${query} WHERE groupId = '${groupId}'`
@@ -51,6 +49,8 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
 
     const allCollections = await _sequelize
         .query(`${query};`, { type: QueryTypes.SELECT });
+
+    console.log("initCollections 1", allCollections)
 
     let modelMap = {};
     for(const collection of allCollections) {
