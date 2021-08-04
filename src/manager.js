@@ -10,7 +10,8 @@ let TEXT = require("./datatypes/Text");
 let TIME = require("./datatypes/Time");
 const { makeMigration } = require("./migrations/makemigration");
 const { runMigrations } = require("./migrations/runmigration");
-const { QueryTypes } = require('sequelize');
+const fs = require('fs');
+const path = require('path');
 
 let collectionManager = {};
 
@@ -39,6 +40,14 @@ collectionManager.resolveMigrations = async (sequelize) => {
 
     console.log("config", config);
     let fromRev = config? config.value.value : 0;
+
+    if (fromRev === 0) {
+        if(!process.env.PWD){
+            process.env.PWD = process.cwd()
+        }
+        let migrationsDir = path.join(process.env.PWD, 'migrations')
+        fs.rmdirSync(migrationsDir, { recursive: true });
+    }
 
     if (!sequelize) {
         console.log("No sequelize found");
