@@ -9,13 +9,13 @@ collectionManager.addWeblancerDataTypes(Sequelize);
 let _sequelize;
 let _models;
 
-async function initCollections (dbname, groupId) {
+async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     _sequelize = new Sequelize(
-        dbname,
-        process.env.DATABASE_USER,
-        process.env.DATABASE_PASSWORD,
+        dbName,
+        dbUser,
+        dbPassword,
         {
-            host:  process.env.POSTGRES_HOST || "localhost",
+            host:  dbHost || "localhost",
             dialect: 'postgres',
         },
     );

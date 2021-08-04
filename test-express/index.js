@@ -1,13 +1,16 @@
+require('dotenv').config();
 const { initCollections, models } = require("../src/collections");
 const express = require('express');
 const cors = require('cors');
 
 const appName = process.env.APP_NAME;
-const dbname = process.env.DBNAME;
+const dbName = process.env.DBNAME;
+const dbUser = process.env.DBUSER;
+const dbPassword = process.env.DBPASSWORD;
 const groupId = process.env.GROUP_ID;
 const websiteName = process.env.WEBSITE_NAME;
 const port = process.env.PORT;
-const baseRoute = process.env.ROUTE;
+const baseRoute = process.env.BASE_ROUTE;
 
 let app = express();
 app.use(cors());
@@ -27,7 +30,7 @@ app.get(baseRoute + '/testdb', async function (req, res) {
     );
 });
 
-initCollections(dbname, groupId).then(() => {
+initCollections(dbName, dbUser, dbPassword, undefined, groupId).then(() => {
     app.listen(process.env.PORT, () => {
         console.log(`${appName} app of ${websiteName} is running on port ${port} successfully`);
     });
