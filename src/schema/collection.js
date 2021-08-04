@@ -26,7 +26,7 @@ const Collection = (sequelize, DataTypes) => {
             type: DataTypes.JSON
         },
         test: {
-            type: DataTypes.JSON
+            type: DataTypes.JSONB
         },
     });
     
