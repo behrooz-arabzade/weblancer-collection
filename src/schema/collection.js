@@ -7,7 +7,8 @@ const Collection = (sequelize, DataTypes) => {
             primaryKey: true
         },
         name: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            unique: true,
         },
         displayName: {
             type: DataTypes.STRING
