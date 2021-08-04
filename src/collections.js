@@ -75,8 +75,6 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     // Resolving assosiations
 
     await _sequelize.sync({
-        // logging: false,
-        alter: true
     })
 
     return {models: _models, sequelize: _sequelize};
