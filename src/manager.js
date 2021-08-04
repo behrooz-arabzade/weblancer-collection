@@ -33,7 +33,8 @@ collectionManager.resolveMigrations = async (sequelize) => {
     let config = await sequelize.models.config.findOne({
         where: {
             key: "migrationRevision"
-        }
+        },
+        attributes: ["key", "value"]
     })
 
     console.log("config", config);
