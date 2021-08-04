@@ -51,13 +51,16 @@ collectionManager.resolveMigrations = async (sequelize) => {
 
     console.log("runMigrations lastRevisition", lastRevisition);
 
-    await sequelize.query(`UPDATE configs SET value = '${
-        JSON.stringify({value: lastRevisition + 1})
-    }' WHERE key = 'migrationRevision'`);
-
-    await sequelize.query(`INSERT INTO configs (key, value) SELECT 'migrationRevision', '${
-        JSON.stringify({value: lastRevisition + 1})
-    }' WHERE NOT EXISTS (SELECT 1 FROM configs WHERE key='migrationRevision')`);
+    if (config) {
+        await config.update({
+            value: {value: lastRevisition + 1}
+        });
+    } else {
+        await sequelize.models.config.create({
+            key: "migrationRevision",
+            value: {value: lastRevisition + 1}
+        });
+    }
 }
 
 module.exports = collectionManager;
