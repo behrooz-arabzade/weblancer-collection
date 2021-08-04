@@ -10,6 +10,7 @@ let TEXT = require("./datatypes/Text");
 let TIME = require("./datatypes/Time");
 const { makeMigration } = require("./migrations/makemigration");
 const { runMigrations } = require("./migrations/runmigration");
+const { QueryTypes } = require('sequelize');
 
 let collectionManager = {};
 
