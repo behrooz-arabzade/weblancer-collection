@@ -46,6 +46,8 @@ collectionManager.resolveMigrations = async (sequelize) => {
 
     let lastRevisition = await runMigrations(sequelize, fromRev);
 
+    console.log("runMigrations lastRevisition", lastRevisition);
+    
     await sequelize.query(`UPDATE configs SET value = '${
         JSON.stringify({value: lastRevisition + 1})
     }' WHERE key = 'migrationRevision'`);
