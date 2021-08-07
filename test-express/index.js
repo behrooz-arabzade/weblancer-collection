@@ -30,10 +30,14 @@ app.get(baseRoute + '/testdb', async function (req, res) {
     );
 });
 
-initCollections(dbName, dbUser, dbPassword, groupId).then(() => {
-    app.listen(process.env.PORT, () => {
-        console.log(`${appName} app of ${websiteName} is running on port ${port} successfully`);
-    });
+initCollections(dbName, dbUser, dbPassword, groupId).then((success, error) => {
+    if (success) {
+        app.listen(process.env.PORT, () => {
+            console.log(`${appName} app of ${websiteName} is running on port ${port} successfully`);
+        });
+    } else {
+        throw new Error(`${appName} app of ${websiteName} error: Can't init collections of website`)
+    }
 }).catch(err => {
     // Deal with the fact the chain failed
     console.log(`${appName} app of ${websiteName} error: Can't init collections of website`);

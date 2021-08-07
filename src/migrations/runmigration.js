@@ -75,14 +75,14 @@ migrationTools.runMigrations = async (sequelize, fromRevision = 0, fromPos = 0, 
         let success = await migrate.executeMigration(queryInterface, path.join(migrationsDir, file), !noTransaction, fromPos, rollback);
         
         if (!success)
-            return lastRev;
+            return {success: false, lastRevision: lastRev};
         
         lastRev = parseInt( path.basename(file).split('-',2)[0]);
 
         fromPos = 0;
     }
 
-    return lastRev;
+    return {success: true, lastRevision: lastRev};
 }
 
 module.exports = migrationTools;

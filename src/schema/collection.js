@@ -26,6 +26,9 @@ const Collection = (sequelize, DataTypes) => {
         },
         relations: {
             type: DataTypes.JSON
+        },
+        metadata: {
+            type: DataTypes.JSON
         }
     });
     

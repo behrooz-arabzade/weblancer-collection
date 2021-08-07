@@ -54,12 +54,23 @@ collectionManager.resolveMigrations = async (sequelize) => {
         return false;
     }
 
-    let created = await makeMigration(newName, sequelize);
-    console.log("makeMigration created", created);
+    try {
+        let created = await makeMigration(newName, sequelize);
+        console.log("makeMigration created", created);
+    
+        let {success, lastRevision} = await runMigrations(sequelize, fromRev);
+    
+        console.log("runMigrations lastRevision", lastRevision);
 
-    let lastRevisition = await runMigrations(sequelize, fromRev);
-
-    console.log("runMigrations lastRevisition", lastRevisition);
+        if (!success) {
+            throw new Error("Can't migrate to database");
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        }
+    }
 
     if (config) {
         await config.update({
@@ -70,6 +81,10 @@ collectionManager.resolveMigrations = async (sequelize) => {
             key: "migrationRevision",
             value: {value: lastRevisition + 1}
         });
+    }
+
+    return {
+        success: true
     }
 }
 

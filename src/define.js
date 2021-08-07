@@ -1,8 +1,18 @@
 module.exports = function define (sequelize, name, schema, relations) {
+    let tempSchema = {...schema}
+    Object.keys(tempSchema).forEach(key => {
+        if (schema[key.isRelation]) {
+            delete schema[key];
+        }
+    });
+    
     Object.values(schema).forEach(field => {
         delete field.weblancerType;
         delete field.name;
         delete field.description;
+        delete field.options;
+        delete field.order;
+        delete field.isRelation;
     });
     
     let model = sequelize.define(name, schema);

@@ -32,26 +32,33 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     _dbPort = dbPort;
 
     // Creating db if not exist
-    let pgConfig = {
-        user: dbUser,
-        password: dbPassword,
-    };
-    dbHost && (pgConfig.host = dbHost);
-    dbPort && (pgConfig.port = dbPort);
-    const pgClient = new Client(pgConfig);
-    await pgClient.connect();
-
-    const isDbExist = async () => {
-        let res = await pgClient.query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
-        return res.rowCount > 0;
-    }
-
-    if (!await isDbExist()) {
-        await pgClient
-            .query(`CREATE DATABASE ${dbName}`);
-    }
+    try {
+        let pgConfig = {
+            user: dbUser,
+            password: dbPassword,
+        };
+        dbHost && (pgConfig.host = dbHost);
+        dbPort && (pgConfig.port = dbPort);
+        const pgClient = new Client(pgConfig);
+        await pgClient.connect();
     
-    await pgClient.end();
+        const isDbExist = async () => {
+            let res = await pgClient.query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
+            return res.rowCount > 0;
+        }
+    
+        if (!await isDbExist()) {
+            await pgClient
+                .query(`CREATE DATABASE ${dbName}`);
+        }
+        
+        await pgClient.end();
+    } catch (error) {
+        return {
+            success: false,
+            error: "Can't connect to the database"
+        }
+    }
     // Creating db if not exist
 
     _sequelize = new Sequelize(
@@ -73,7 +80,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         allCollections = await _sequelize
             .query(`${query};`, { type: QueryTypes.SELECT });
     } catch (err) {
-        console.log("initCollections error 0", err)
+        console.log("error", err)
     }
 
     let modelMap = {};
@@ -99,12 +106,11 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     });
     // Resolving assosiations
 
-    await _sequelize.sync({
-    })
+    await _sequelize.sync();
 
-    await resolveMigrations(_sequelize);
+    let {success, error} = await resolveMigrations(_sequelize);
 
-    return {models: _models, sequelize: _sequelize};
+    return {success, error, models: _models, sequelize: _sequelize};
 }
 
 async function updateCollections() {
@@ -166,7 +172,8 @@ async function createCollection(name, displayName, description, isApp) {
             type: DataTypes.BIGINT,
             unique: true,
             autoIncrement: true,
-            primaryKey: true
+            primaryKey: true,
+            order: 0
         }
     };
 
@@ -178,7 +185,135 @@ async function createCollection(name, displayName, description, isApp) {
     };
 }
 
-async function addField(collectionName, name, key, type, description) {
+async function updateCollection(collectionName, displayName, description, metadata) {
+    let collection;
+    try {
+        collection = await models.instance.collection.findOne({
+            where: {
+                name: collectionName
+            }
+        })
+
+        if (!collection) {
+            return {
+                success: false,
+                error: "Collection not found",
+                errorStatusCode: 404
+            }
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            errorStatusCode: 500
+        }
+    }
+
+    await collection.update({
+        displayName,
+        description,
+        metadata: {...collection.metadata, ...metadata}
+    })
+    
+    return {
+        success: true,
+        collection
+    }
+}
+
+async function getCollection(collectionName) {
+    let collection;
+    try {
+        collection = await models.instance.collection.findOne({
+            where: {
+                name: collectionName
+            }
+        })
+
+        if (!collection) {
+            return {
+                success: false,
+                error: "Collection not found",
+                errorStatusCode: 404
+            }
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            errorStatusCode: 500
+        }
+    }
+    
+    return {
+        success: true,
+        collection
+    }
+}
+
+async function getAllCollections() {
+    try {
+        let collections = await models.instance.collection.findAll()
+    
+        return {
+            success: true,
+            collections
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            errorStatusCode: 500
+        }
+    }
+}
+
+async function updateSchema(collectionName, schema) {
+    let collection;
+    try {
+        collection = await models.instance.collection.findOne({
+            where: {
+                name: collectionName
+            }
+        })
+
+        if (!collection) {
+            return {
+                success: false,
+                error: "Collection not found",
+                errorStatusCode: 404
+            }
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            errorStatusCode: 500
+        }
+    }
+    
+    let oldSchema = {...collection.schema};
+
+    await collection.update({schema});
+    
+    let {success, error} = await updateCollections();
+
+    if (!success) {
+        await collection.update({schema: oldSchema});
+
+        return {
+            success: false,
+            error
+        }
+    }
+
+    return {
+        success: true,
+        collection
+    }
+}
+
+async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
         collection = await models.instance.collection.findOne({
@@ -218,11 +353,103 @@ async function addField(collectionName, name, key, type, description) {
         }
     }
 
-    collection[key] = {
+    let schema = collection.schema;
+
+    schema[key] = {
         type: getDataType(type),
         name,
         description,
+        options,
+        weblancerType: type,
+        order: Object.keys(schema).length
+    }
+
+    await collection.update({schema});
+
+    let {success, error} = await updateCollections();
+
+    if (!success) {
+        delete schema[key];
+
+        await collection.update({schema});
+
+        return {
+            success: false,
+            error
+        }
+    }
+
+    return {
+        success: true,
+        collection
+    }
+}
+
+async function updateField(collectionName, name, key, type, description, options) {
+    let collection;
+    try {
+        collection = await models.instance.collection.findOne({
+            where: {
+                name: collectionName
+            }
+        })
+
+        if (!collection) {
+            return {
+                success: false,
+                error: "Collection not found",
+                errorStatusCode: 404
+            }
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            errorStatusCode: 500
+        }
+    }
+    
+    if (!collection[key]) {
+        return {
+            success: false,
+            error: "Key not found",
+            errorStatusCode: 404
+        }
+    }
+    
+    if (!getDataType(type)) {
+        return {
+            success: false,
+            error: "Type not found",
+            errorStatusCode: 404
+        }
+    }
+
+    let schema = collection.schema;
+
+    let oldSchemaKey = {...schema[key]};
+
+    schema[key] = {
+        type: getDataType(type),
+        name,
+        description,
+        options,
         weblancerType: type
+    }
+
+    await collection.update({schema});
+
+    let {success, error} = await updateCollections();
+
+    if (!success) {
+        schema[key] = {...oldSchemaKey};
+
+        await collection.update({schema});
+
+        return {
+            success: false,
+            error
+        }
     }
 
     return {
@@ -250,5 +477,10 @@ module.exports = {
     DataTypes, 
     updateCollections,
     createCollection,
-    addField
+    updateCollection,
+    getAllCollections,
+    getCollection,
+    updateSchema,
+    addField,
+    updateField
 };
