@@ -13,13 +13,19 @@ collectionManager.addWeblancerDataTypes(Sequelize);
 let _sequelize;
 let _models;
 
-async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
+async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort) {
     dbName = dbName.toLowerCase();
 
-    const pgClient = new Client();
+    // Creating db if not exist
+    let pgConfig = {
+        user: dbUser,
+        password: dbPassword,
+    };
+    dbHost && (pgConfig.host = dbHost);
+    dbPort && (pgConfig.port = dbPort);
+    const pgClient = new Client(pgConfig);
     await pgClient.connect();
 
-    // Creating db if not exist
     const isDbExist = async () => {
         let res = await pgClient.query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
         return res.rowCount > 0;
@@ -42,7 +48,6 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
             dialect: 'postgres',
         },
     );
-    console.log("initCollections 0")
     let query = "SELECT * FROM collections";
     if (groupId) {
         query = `${query} WHERE groupId = '${groupId}'`
@@ -50,30 +55,24 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
 
     let allCollections = [];
     try {
-        console.log("initCollections 001")
         allCollections = await _sequelize
             .query(`${query};`, { type: QueryTypes.SELECT });
-            console.log("initCollections 002")
     } catch (err) {
         console.log("initCollections error 0", err)
     }
-    console.log("initCollections 003")
 
     let modelMap = {};
     for(const collection of allCollections) {
         modelMap[collection.name] = 
             define(_sequelize, collection.name, collection.schema, collection.relation); 
     }
-    console.log("initCollections 004")
 
     _models = {
         collection: Collection(_sequelize, DataTypes),
         config: Config(_sequelize, DataTypes),
         ...modelMap
     };
-    console.log("initCollections 005")
 
-    console.log("initCollections 1")
     // Resolving assosiations
     let allModels = {};
     Object.values(_models).forEach(model => {
@@ -85,14 +84,11 @@ async function initCollections (dbName, dbUser, dbPassword, dbHost, groupId) {
     });
     // Resolving assosiations
 
-    console.log("initCollections 2")
     await _sequelize.sync({
     })
 
-    console.log("initCollections 3")
     await resolveMigrations(_sequelize);
 
-    console.log("initCollections 4")
     return {models: _models, sequelize: _sequelize};
 }
 

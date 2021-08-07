@@ -30,7 +30,7 @@ app.get(baseRoute + '/testdb', async function (req, res) {
     );
 });
 
-initCollections(dbName, dbUser, dbPassword, undefined, groupId).then(() => {
+initCollections(dbName, dbUser, dbPassword, groupId).then(() => {
     app.listen(process.env.PORT, () => {
         console.log(`${appName} app of ${websiteName} is running on port ${port} successfully`);
     });
