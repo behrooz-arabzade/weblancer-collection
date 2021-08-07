@@ -104,4 +104,4 @@ const models = {
     }
 };
 
-module.exports = {initCollections, sequelize, models};
+module.exports = {initCollections, sequelize, models, DataTypes};
