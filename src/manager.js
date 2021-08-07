@@ -54,12 +54,14 @@ collectionManager.resolveMigrations = async (sequelize) => {
         return false;
     }
 
+    let lastRevision;
     try {
         let created = await makeMigration(newName, sequelize);
         console.log("makeMigration created", created);
     
-        let {success, lastRevision} = await runMigrations(sequelize, fromRev);
+        let {success, lastRevision: newLastRevision} = await runMigrations(sequelize, fromRev);
     
+        lastRevision = newLastRevision;
         console.log("runMigrations lastRevision", lastRevision);
 
         if (!success) {
@@ -74,12 +76,12 @@ collectionManager.resolveMigrations = async (sequelize) => {
 
     if (config) {
         await config.update({
-            value: {value: lastRevisition + 1}
+            value: {value: lastRevision + 1}
         });
     } else {
         await sequelize.models.config.create({
             key: "migrationRevision",
-            value: {value: lastRevisition + 1}
+            value: {value: lastRevision + 1}
         });
     }
 
