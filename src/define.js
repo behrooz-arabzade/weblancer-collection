@@ -1,4 +1,10 @@
 module.exports = function define (sequelize, name, schema, relations) {
+    Object.values(schema).forEach(field => {
+        delete field.weblancerType;
+        delete field.name;
+        delete field.description;
+    });
+    
     let model = sequelize.define(name, schema);
 
     model.associate = function (models) {

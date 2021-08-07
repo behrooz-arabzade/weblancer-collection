@@ -1,6 +1,7 @@
 const { Client } = require('pg')
 const Sequelize = require('sequelize');
 const { QueryTypes } = require('sequelize');
+const getDataType = require('./datatypes/getDataType');
 const define = require('./define');
 const { resolveMigrations } = require('./manager');
 const collectionManager = require('./manager');
@@ -13,8 +14,22 @@ collectionManager.addWeblancerDataTypes(Sequelize);
 let _sequelize;
 let _models;
 
+let _dbName;
+let _dbUser;
+let _dbPassword;
+let _groupId;
+let _dbHost;
+let _dbPort;
+
 async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort) {
     dbName = dbName.toLowerCase();
+
+    _dbName = dbName;
+    _dbUser = dbUser;
+    _dbPassword = dbPassword;
+    _groupId = groupId;
+    _dbHost = dbHost;
+    _dbPort = dbPort;
 
     // Creating db if not exist
     let pgConfig = {
@@ -92,6 +107,130 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     return {models: _models, sequelize: _sequelize};
 }
 
+async function updateCollections() {
+    return await initCollections(_dbName, _dbUser, _dbPassword, _groupId, _dbHost, _dbPort);
+}
+
+async function createCollection(name, displayName, description, isApp) {
+    let checkName = async (name, tryTime = 1) => {
+        try {
+            let sameCollection = await models.instance.findOne({
+                where: {
+                    name
+                }
+            });
+    
+            if (sameCollection) {
+                if (!isApp) {
+                    return false;
+                }
+    
+                return `${name}_${tryTime}`;
+            }
+
+            return name;
+        } catch(error) {
+            console.log("route create error", error);
+            return false;
+        }
+    }
+
+    name = name.toLowerCase();
+
+    let nameChecked = false;
+    let tryTime = 1;
+    while (!nameChecked) {
+        let newName = await checkName(name, tryTime);
+
+        if (!newName) {
+            return {
+                success: false, 
+                error: "Name is not acceptable, try another one",
+                errorStatusCode: 409
+            };
+        }
+
+        if (name === newName) {
+            break;
+        }
+
+        tryTime++;
+    }
+
+    let newCollection = {
+        name, displayName, description
+    };
+
+    newCollection.schema = {
+        id : {
+            type: DataTypes.BIGINT,
+            unique: true,
+            autoIncrement: true,
+            primaryKey: true
+        }
+    };
+
+    await models.instance.collection.create(newCollection);
+    
+    return {
+        success: true,
+        collections: await models.instance.collection.findAll().toJSON()
+    };
+}
+
+async function addField(collectionName, name, key, type, description) {
+    let collection;
+    try {
+        collection = await models.instance.collection.findOne({
+            where: {
+                name: collectionName
+            }
+        })
+
+        if (!collection) {
+            return {
+                success: false,
+                error: "Collection not found",
+                errorStatusCode: 404
+            }
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+            errorStatusCode: 500
+        }
+    }
+    
+    if (collection[key]) {
+        return {
+            success: false,
+            error: "Key exist in collection, try another key",
+            errorStatusCode: 409
+        }
+    }
+    
+    if (!getDataType(type)) {
+        return {
+            success: false,
+            error: "Type not found",
+            errorStatusCode: 404
+        }
+    }
+
+    collection[key] = {
+        type: getDataType(type),
+        name,
+        description,
+        weblancerType: type
+    }
+
+    return {
+        success: true,
+        collection
+    }
+}
+
 const sequelize = {
     get instance() {
         return _sequelize;
@@ -104,4 +243,12 @@ const models = {
     }
 };
 
-module.exports = {initCollections, sequelize, models, DataTypes};
+module.exports = {
+    initCollections, 
+    sequelize, 
+    models, 
+    DataTypes, 
+    updateCollections,
+    createCollection,
+    addField
+};
