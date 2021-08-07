@@ -18,7 +18,6 @@
   "homepage": "https://github.com/behroozkhan/weblancer-collection#readme",
   "dependencies": {
     "deep-diff": "0.3.8",
-    "fs": "0.0.1-security",
     "js-beautify": "1.14.0",
     "lodash": "4.17.21",
     "object-hash": "1.3.1",
