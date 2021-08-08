@@ -1,3 +1,5 @@
+const getDataType = require('./datatypes/getDataType');
+
 module.exports = function define (sequelize, name, schema, relations) {
     let tempSchema = {...schema}
     Object.keys(tempSchema).forEach(key => {
@@ -5,7 +7,9 @@ module.exports = function define (sequelize, name, schema, relations) {
             delete schema[key];
         }
     });
-    
+
+    schema.type = getDataType(schema.weblancerType);
+
     Object.values(schema).forEach(field => {
         delete field.weblancerType;
         delete field.name;
@@ -14,7 +18,7 @@ module.exports = function define (sequelize, name, schema, relations) {
         delete field.order;
         delete field.isRelation;
     });
-    
+
     let model = sequelize.define(name, schema);
 
     model.associate = function (models) {

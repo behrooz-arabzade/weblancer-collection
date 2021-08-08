@@ -41,17 +41,17 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         dbPort && (pgConfig.port = dbPort);
         const pgClient = new Client(pgConfig);
         await pgClient.connect();
-    
+
         const isDbExist = async () => {
             let res = await pgClient.query(`SELECT FROM pg_database WHERE datname = '${dbName}'`);
             return res.rowCount > 0;
         }
-    
+
         if (!await isDbExist()) {
             await pgClient
                 .query(`CREATE DATABASE ${dbName}`);
         }
-        
+
         await pgClient.end();
     } catch (error) {
         return {
@@ -85,8 +85,8 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 
     let modelMap = {};
     for(const collection of allCollections) {
-        modelMap[collection.name] = 
-            define(_sequelize, collection.name, collection.schema, collection.relation); 
+        modelMap[collection.name] =
+            define(_sequelize, collection.name, collection.schema, collection.relation);
     }
 
     _models = {
@@ -125,12 +125,12 @@ async function createCollection(name, displayName, description, isApp) {
                     name
                 }
             });
-    
+
             if (sameCollection) {
                 if (!isApp) {
                     return false;
                 }
-    
+
                 return `${name}_${tryTime}`;
             }
 
@@ -150,7 +150,7 @@ async function createCollection(name, displayName, description, isApp) {
 
         if (!newName) {
             return {
-                success: false, 
+                success: false,
                 error: "Name is not acceptable, try another one",
                 errorStatusCode: 409
             };
@@ -178,7 +178,7 @@ async function createCollection(name, displayName, description, isApp) {
     };
 
     await models.instance.collection.create(newCollection);
-    
+
     return {
         success: true,
         collections: await models.instance.collection.findAll().toJSON()
@@ -214,7 +214,7 @@ async function updateCollection(collectionName, displayName, description, metada
         description,
         metadata: {...collection.metadata, ...metadata}
     })
-    
+
     return {
         success: true,
         collection
@@ -244,7 +244,7 @@ async function getCollection(collectionName) {
             errorStatusCode: 500
         }
     }
-    
+
     return {
         success: true,
         collection
@@ -254,7 +254,7 @@ async function getCollection(collectionName) {
 async function getAllCollections() {
     try {
         let collections = await models.instance.collection.findAll()
-    
+
         return {
             success: true,
             collections
@@ -291,11 +291,11 @@ async function updateSchema(collectionName, schema) {
             errorStatusCode: 500
         }
     }
-    
+
     let oldSchema = {...collection.schema};
 
     await collection.update({schema});
-    
+
     let {success, error} = await updateCollections();
 
     if (!success) {
@@ -336,7 +336,7 @@ async function addField(collectionName, name, key, type, description, options) {
             errorStatusCode: 500
         }
     }
-    
+
     if (collection[key]) {
         return {
             success: false,
@@ -344,7 +344,7 @@ async function addField(collectionName, name, key, type, description, options) {
             errorStatusCode: 409
         }
     }
-    
+
     if (!getDataType(type)) {
         return {
             success: false,
@@ -356,7 +356,6 @@ async function addField(collectionName, name, key, type, description, options) {
     let schema = collection.schema;
 
     schema[key] = {
-        type: getDataType(type),
         name,
         description,
         options,
@@ -408,7 +407,7 @@ async function updateField(collectionName, name, key, type, description, options
             errorStatusCode: 500
         }
     }
-    
+
     if (!collection[key]) {
         return {
             success: false,
@@ -416,7 +415,7 @@ async function updateField(collectionName, name, key, type, description, options
             errorStatusCode: 404
         }
     }
-    
+
     if (!getDataType(type)) {
         return {
             success: false,
@@ -471,10 +470,10 @@ const models = {
 };
 
 module.exports = {
-    initCollections, 
-    sequelize, 
-    models, 
-    DataTypes, 
+    initCollections,
+    sequelize,
+    models,
+    DataTypes,
     updateCollections,
     createCollection,
     updateCollection,
