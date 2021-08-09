@@ -117,7 +117,7 @@ async function updateCollections() {
     return await initCollections(_dbName, _dbUser, _dbPassword, _groupId, _dbHost, _dbPort);
 }
 
-async function createCollection(name, displayName, description, isApp) {
+async function createCollection(name, displayName, description, groupId, metadata, isApp) {
     let checkName = async (name, tryTime = 1) => {
         try {
             let sameCollection = await models.instance.findOne({
@@ -164,7 +164,7 @@ async function createCollection(name, displayName, description, isApp) {
     }
 
     let newCollection = {
-        name, displayName, description
+        name, displayName, description, groupId, metadata
     };
 
     newCollection.schema = {
@@ -185,7 +185,7 @@ async function createCollection(name, displayName, description, isApp) {
     };
 }
 
-async function updateCollection(collectionName, displayName, description, metadata) {
+async function updateCollection(collectionName, displayName, description, groupId, metadata) {
     let collection;
     try {
         collection = await models.instance.collection.findOne({
@@ -212,6 +212,7 @@ async function updateCollection(collectionName, displayName, description, metada
     await collection.update({
         displayName,
         description,
+        groupId,
         metadata: {...collection.metadata, ...metadata}
     })
 
