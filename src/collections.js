@@ -340,14 +340,6 @@ async function addField(collectionName, name, key, type, description, options) {
         }
     }
 
-    if (collection[key]) {
-        return {
-            success: false,
-            error: "Key exist in collection, try another key",
-            errorStatusCode: 409
-        }
-    }
-
     if (!getDataType(type)) {
         return {
             success: false,
@@ -357,6 +349,14 @@ async function addField(collectionName, name, key, type, description, options) {
     }
 
     let schema = collection.schema;
+
+    if (schema[key]) {
+        return {
+            success: false,
+            error: "Key exist in collection, try another key",
+            errorStatusCode: 409
+        }
+    }
 
     schema[key] = {
         name,
