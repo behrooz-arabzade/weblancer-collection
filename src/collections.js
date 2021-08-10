@@ -173,7 +173,9 @@ async function createCollection(name, displayName, description, groupId, metadat
             unique: true,
             autoIncrement: true,
             primaryKey: true,
-            order: 0
+            order: 0,
+            name: "id",
+            description: "This field generate automatically from weblancer",
         }
     };
 
