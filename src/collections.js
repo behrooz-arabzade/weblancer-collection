@@ -118,9 +118,8 @@ async function initSandBox (sandbox) {
     try{
         let config = await sequelize.instance.models.config.findOne({
             where: {
-                key: "initialized"
-            },
-            attributes: ["id", "key", "value"]
+                key: "sandBoxInitialized"
+            }
         });
 
         console.log("initSandBox 2", config)
@@ -163,7 +162,7 @@ async function initSandBox (sandbox) {
 
         console.log("initSandBox 8")
         await sequelize.instance.models.config.create({
-            key: "initialized",
+            key: "sandBoxInitialized",
             value: {value: true}
         });
 
