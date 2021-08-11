@@ -151,6 +151,11 @@ async function initSandBox (sandbox) {
             await _sequelize.models[collectionName].bulkCreate(records);
         }
 
+        await _sequelize.models.config.create({
+            key: "initialized",
+            value: {value: true}
+        });
+
         return {success: true};
     } catch (error) {
         return {success: false, error};
