@@ -114,7 +114,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 }
 
 async function initSandBox (sandbox) {
-    let config = await _sequelize.models.config.findOne({
+    let config = await sequelize.instance.models.config.findOne({
         where: {
             key: "initialized"
         },
@@ -126,7 +126,7 @@ async function initSandBox (sandbox) {
 
     for (const collection of (sandbox.collections || [])) {
         let newCollection = {...collection};
-        await _sequelize.models.collection.create(newCollection);
+        await sequelize.instance.models.collection.create(newCollection);
     }
 
     let {success, error} = await updateCollections();
@@ -148,10 +148,10 @@ async function initSandBox (sandbox) {
             let collectionName = keys[i];
             let records = sandbox[collectionName];
 
-            await _sequelize.models[collectionName].bulkCreate(records);
+            await sequelize.instance.models[collectionName].bulkCreate(records);
         }
 
-        await _sequelize.models.config.create({
+        await sequelize.instance.models.config.create({
             key: "initialized",
             value: {value: true}
         });
