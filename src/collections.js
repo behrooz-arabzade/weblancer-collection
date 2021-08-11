@@ -114,9 +114,9 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 }
 
 async function initSandBox (sandbox) {
-    console.log("initSandBox 1")
+    console.log("initSandBox 1", _sequelize)
     try{
-        let config = await sequelize.instance.models.config.findOne({
+        let config = await _sequelize.models.config.findOne({
             where: { key: 'sandBoxInitialized' }
         });
 
