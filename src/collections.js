@@ -123,7 +123,7 @@ async function initSandBox (sandbox) {
             attributes: ["id", "key", "value"]
         });
 
-        console.log("initSandBox 2")
+        console.log("initSandBox 2", config)
         if (config)
             return {success: true};
     } catch (error) {
