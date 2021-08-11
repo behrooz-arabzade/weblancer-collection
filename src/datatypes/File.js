@@ -8,7 +8,7 @@ module.exports.define = function define(Sequelize) {
         toSql() {
             return 'JSONB';
         }
-    
+
         // Optional, validator function
         // {
         //     urlPath: "1/2/3/asdd/asdasd.png",
@@ -23,7 +23,7 @@ module.exports.define = function define(Sequelize) {
 
             return false;
         }
-    
+
         _sanitize(value) {
             // Force all numbers to be positive
             if (typeof value === "string") {
@@ -31,7 +31,7 @@ module.exports.define = function define(Sequelize) {
                     value = JSON.parse(value);
                 } catch {
                     value = {
-                        urlPath: value
+                        url: value
                     }
                 }
             }
@@ -44,25 +44,25 @@ module.exports.define = function define(Sequelize) {
             if (!value.type) {
                 value.type = "other";
             }
-        
+
             return value;
         }
-    
+
         _stringify(value) {
             return JSON.stringify(value);
         }
-    
+
         static parse(value) {
             return JSON.parse(value);
         }
     }
-        
+
     DataTypes.FILE = FILE;
-    
+
     DataTypes.FILE.prototype.key = DataTypes.FILE.key = 'FILE'
-    
+
     Sequelize.FILE = Sequelize.Utils.classToInvokable(DataTypes.FILE);
-    
+
     type = DataTypes.FILE;
 }
 
