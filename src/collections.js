@@ -411,14 +411,6 @@ async function updateField(collectionName, name, key, type, description, options
         }
     }
 
-    if (!collection[key]) {
-        return {
-            success: false,
-            error: "Key not found",
-            errorStatusCode: 404
-        }
-    }
-
     if (!getDataType(type)) {
         return {
             success: false,
@@ -428,6 +420,14 @@ async function updateField(collectionName, name, key, type, description, options
     }
 
     let schema = collection.schema;
+
+    if (!schema[key]) {
+        return {
+            success: false,
+            error: "Key not found",
+            errorStatusCode: 404
+        }
+    }
 
     let oldSchemaKey = {...schema[key]};
 
