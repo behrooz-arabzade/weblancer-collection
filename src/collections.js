@@ -113,6 +113,50 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     return {success, error, models: _models, sequelize: _sequelize};
 }
 
+async function initSandBox (sandbox) {
+    let config = await _sequelize.models.config.findOne({
+        where: {
+            key: "initialized"
+        },
+        attributes: ["id", "key", "value"]
+    });
+
+    if (config)
+        return {success: true};
+
+    for (const collection of (sandbox.collections || [])) {
+        let newCollection = {...collection};
+        await _sequelize.models.collection.create(newCollection);
+    }
+
+    let {success, error} = await updateCollections();
+
+    if (!success) {
+        return {
+            success: false,
+            error
+        }
+    }
+
+    try {
+        let keys =  Object.keys(sandbox);
+
+        for (let i = 0; i < keys.length; i++) {
+            if (keys[i] === "collections")
+                continue;
+
+            let collectionName = keys[i];
+            let records = sandbox[collectionName];
+
+            await _sequelize.models[collectionName].bulkCreate(records);
+        }
+
+        return {success: true};
+    } catch (error) {
+        return {success: false, error};
+    }
+}
+
 async function updateCollections() {
     return await initCollections(_dbName, _dbUser, _dbPassword, _groupId, _dbHost, _dbPort);
 }
@@ -484,5 +528,6 @@ module.exports = {
     getCollection,
     updateSchema,
     addField,
-    updateField
+    updateField,
+    initSandBox
 };
