@@ -124,7 +124,7 @@ async function initSandBox (sandbox) {
         // });
 
         console.log("initSandBox 2", config)
-        if (config)
+        if (config.length > 0)
             return {success: true};
     } catch (error) {
         console.log("initSandBox 3", error)
