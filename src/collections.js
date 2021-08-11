@@ -114,23 +114,32 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 }
 
 async function initSandBox (sandbox) {
-    let config = await sequelize.instance.models.config.findOne({
-        where: {
-            key: "initialized"
-        },
-        attributes: ["id", "key", "value"]
-    });
+    console.log("initSandBox 1")
+    try{
+        let config = await sequelize.instance.models.config.findOne({
+            where: {
+                key: "initialized"
+            },
+            attributes: ["id", "key", "value"]
+        });
 
-    if (config)
-        return {success: true};
+        console.log("initSandBox 2")
+        if (config)
+            return {success: true};
+    } catch (error) {
+        console.log("initSandBox 3", error)
+    }
 
+    console.log("initSandBox 4")
     for (const collection of (sandbox.collections || [])) {
         let newCollection = {...collection};
         await sequelize.instance.models.collection.create(newCollection);
     }
 
+    console.log("initSandBox 5")
     let {success, error} = await updateCollections();
 
+    console.log("initSandBox 6")
     if (!success) {
         return {
             success: false,
@@ -138,6 +147,7 @@ async function initSandBox (sandbox) {
         }
     }
 
+    console.log("initSandBox 7")
     try {
         let keys =  Object.keys(sandbox);
 
@@ -151,11 +161,13 @@ async function initSandBox (sandbox) {
             await sequelize.instance.models[collectionName].bulkCreate(records);
         }
 
+        console.log("initSandBox 8")
         await sequelize.instance.models.config.create({
             key: "initialized",
             value: {value: true}
         });
 
+        console.log("initSandBox 9")
         return {success: true};
     } catch (error) {
         return {success: false, error};
