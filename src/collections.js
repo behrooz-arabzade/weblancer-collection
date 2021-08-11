@@ -118,7 +118,7 @@ async function initSandBox (sandbox) {
     try{
         let config = await sequelize.instance.models.config.findOne({
             where: {
-                key: "sandBoxInitialized"
+                id: 2
             }
         });
 
