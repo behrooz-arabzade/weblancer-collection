@@ -83,6 +83,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         console.log("error", err)
     }
 
+    console.log("allCollections", allCollections.length)
     let modelMap = {};
     for(const collection of allCollections) {
         modelMap[collection.name] =
