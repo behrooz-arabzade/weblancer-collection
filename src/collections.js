@@ -184,6 +184,11 @@ async function initSandBox (sandbox) {
                     for (const prop of props) {
                         if (!Object.keys(collection.schema).includes(prop)) {
                             delete record[prop];
+                            continue;
+                        }
+
+                        if (collection.schema[prop].weblancerType === "video") {
+                            record[prop] = JSON.stringify(record[prop]);
                         }
                     }
                 });
