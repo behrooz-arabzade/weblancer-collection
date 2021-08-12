@@ -139,13 +139,12 @@ async function initSandBox (sandbox) {
         console.log("initSandBox 4")
 
         for (const collection of (sandbox.collections || [])) {
-            let count = await _sequelize.models.collection.count({
-                where: {
-                    name: collection.name
-                }
-            });
-            console.log("initSandBox 4.5", collection.name, count);
-            if (count > 0) {
+            let query = `SELECT * FROM "collections" WHERE "collections"."name" = '${collection.name}'`;
+            let collections = await _sequelize
+                .query(`${query};`, { type: QueryTypes.SELECT });
+
+            console.log("initSandBox 4.5", collection.name, collections);
+            if (collections.length > 0) {
                 continue;
             }
             let newCollection = {...collection};
