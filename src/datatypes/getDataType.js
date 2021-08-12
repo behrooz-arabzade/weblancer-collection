@@ -10,7 +10,6 @@ const { TEXT } = require("./Text");
 const { TIME } = require("./Time");
 
 module.exports = function getDataType(weblancerType) {
-    console.log("getDataType weblancerType ", weblancerType)
     switch (weblancerType) {
         case "text":
             return TEXT;
@@ -19,7 +18,6 @@ module.exports = function getDataType(weblancerType) {
         case "boolean":
             return BOOLEAN;
         case "number":
-            console.log("getDataType return number", NUMBER)
             return NUMBER;
         case "datetime":
             return DATETIME;
