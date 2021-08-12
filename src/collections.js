@@ -188,6 +188,7 @@ async function initSandBox (sandbox) {
                     }
                 });
 
+                console.log("initSandBox 7.5", records);
                 await _sequelize.models[collectionName].bulkCreate(records, {
                     ignoreDuplicates: true
                 });
