@@ -131,7 +131,15 @@ async function initSandBox (sandbox) {
     }
 
     console.log("initSandBox 4")
+
     for (const collection of (sandbox.collections || [])) {
+        if (_sequelize.models.collection.count({
+            where: {
+                name: collection.name
+            }
+        }) > 0) {
+            continue;
+        }
         let newCollection = {...collection};
         await _sequelize.models.collection.create(newCollection);
     }
