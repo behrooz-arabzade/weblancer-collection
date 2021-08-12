@@ -179,7 +179,7 @@ async function initSandBox (sandbox) {
                 let records = sandbox[collectionName];
 
                 records.forEach(record => {
-                    // delete record.id;
+                    delete record.id;
                     let props = Object.keys(record);
                     for (const prop of props) {
                         if (!Object.keys(collection.schema).includes(prop)) {
