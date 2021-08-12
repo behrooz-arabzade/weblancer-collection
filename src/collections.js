@@ -191,8 +191,7 @@ async function initSandBox (sandbox) {
                             collection.schema[prop].weblancerType === "audio" ||
                             collection.schema[prop].weblancerType === "image" ||
                             collection.schema[prop].weblancerType === "document" ||
-                            collection.schema[prop].weblancerType === "object" ||
-                            collection.schema[prop].weblancerType === "array")
+                            collection.schema[prop].weblancerType === "object")
                         {
                             record[prop] = JSON.stringify(record[prop]);
                         }
