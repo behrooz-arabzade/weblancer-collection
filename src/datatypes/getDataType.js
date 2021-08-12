@@ -18,6 +18,7 @@ module.exports = function getDataType(weblancerType) {
         case "boolean":
             return BOOLEAN;
         case "number":
+            console.log("getDataType return number", NUMBER)
             return NUMBER;
         case "datetime":
             return DATETIME;
