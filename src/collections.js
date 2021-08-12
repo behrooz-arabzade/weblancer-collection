@@ -183,7 +183,7 @@ async function initSandBox (sandbox) {
                     let props = Object.keys(record);
                     for (const prop of props) {
                         if (!Object.keys(collection.schema).includes(prop)) {
-                            delete record[record];
+                            delete record[prop];
                         }
                     }
                 });
