@@ -133,7 +133,7 @@ async function initSandBox (sandbox) {
     console.log("initSandBox 4")
 
     for (const collection of (sandbox.collections || [])) {
-        let count = _sequelize.models.collection.count({
+        let count = await _sequelize.models.collection.count({
             where: {
                 name: collection.name
             }
