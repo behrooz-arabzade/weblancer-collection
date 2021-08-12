@@ -173,7 +173,9 @@ async function initSandBox (sandbox) {
                     delete record.id;
                 });
 
-                await _sequelize.models[collectionName].bulkCreate(records);
+                await _sequelize.models[collectionName].bulkCreate(records, {
+                    ignoreDuplicates: true
+                });
             }
 
             console.log("initSandBox 8")
