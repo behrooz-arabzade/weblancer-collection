@@ -114,71 +114,75 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 }
 
 async function initSandBox (sandbox) {
-    console.log("initSandBox 1")
     try{
-        let query = `SELECT "id", "key", "value" FROM "configs" AS "config" WHERE "config"."key" = 'sandBoxInitialized'`;
-        let config = await _sequelize
-            .query(`${query};`, { type: QueryTypes.SELECT });
-        // let config = await _sequelize.models.config.findOne({
-        //     where: { key: 'sandBoxInitialized' }
-        // });
+        console.log("initSandBox 1")
+        try{
+            let query = `SELECT "id", "key", "value" FROM "configs" AS "config" WHERE "config"."key" = 'sandBoxInitialized'`;
+            let config = await _sequelize
+                .query(`${query};`, { type: QueryTypes.SELECT });
+            // let config = await _sequelize.models.config.findOne({
+            //     where: { key: 'sandBoxInitialized' }
+            // });
 
-        console.log("initSandBox 2", config)
-        if (config.length > 0)
-            return {success: true};
-    } catch (error) {
-        console.log("initSandBox 3", error)
-    }
-
-    console.log("initSandBox 4")
-
-    for (const collection of (sandbox.collections || [])) {
-        let count = await _sequelize.models.collection.count({
-            where: {
-                name: collection.name
-            }
-        });
-        console.log("initSandBox 4.5", collection.name, count);
-        if (count > 0) {
-            continue;
+            console.log("initSandBox 2", config)
+            if (config.length > 0)
+                return {success: true};
+        } catch (error) {
+            console.log("initSandBox 3", error)
         }
-        let newCollection = {...collection};
-        await _sequelize.models.collection.create(newCollection);
-    }
 
-    console.log("initSandBox 5")
-    let {success, error} = await updateCollections();
+        console.log("initSandBox 4")
 
-    console.log("initSandBox 6")
-    if (!success) {
-        return {
-            success: false,
-            error
-        }
-    }
-
-    console.log("initSandBox 7")
-    try {
-        let keys =  Object.keys(sandbox);
-
-        for (let i = 0; i < keys.length; i++) {
-            if (keys[i] === "collections")
+        for (const collection of (sandbox.collections || [])) {
+            let count = await _sequelize.models.collection.count({
+                where: {
+                    name: collection.name
+                }
+            });
+            console.log("initSandBox 4.5", collection.name, count);
+            if (count > 0) {
                 continue;
-
-            let collectionName = keys[i];
-            let records = sandbox[collectionName];
-
-            await _sequelize.models[collectionName].bulkCreate(records);
+            }
+            let newCollection = {...collection};
+            await _sequelize.models.collection.create(newCollection);
         }
 
-        console.log("initSandBox 8")
-        await _sequelize.models.config.create({
-            key: "sandBoxInitialized",
-            value: {value: true}
-        });
+        console.log("initSandBox 5")
+        let {success, error} = await updateCollections();
 
-        console.log("initSandBox 9")
-        return {success: true};
+        console.log("initSandBox 6")
+        if (!success) {
+            return {
+                success: false,
+                error
+            }
+        }
+
+        console.log("initSandBox 7")
+        try {
+            let keys =  Object.keys(sandbox);
+
+            for (let i = 0; i < keys.length; i++) {
+                if (keys[i] === "collections")
+                    continue;
+
+                let collectionName = keys[i];
+                let records = sandbox[collectionName];
+
+                await _sequelize.models[collectionName].bulkCreate(records);
+            }
+
+            console.log("initSandBox 8")
+            await _sequelize.models.config.create({
+                key: "sandBoxInitialized",
+                value: {value: true}
+            });
+
+            console.log("initSandBox 9")
+            return {success: true};
+        } catch (error) {
+            return {success: false, error};
+        }
     } catch (error) {
         return {success: false, error};
     }
