@@ -77,7 +77,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 
     let allCollections = [];
     try {
-        allCollections = await _sequelize
+        allCollections = await sequelize.instance
             .query(`${query};`, { type: QueryTypes.SELECT });
     } catch (err) {
         console.log("error", err)
@@ -86,12 +86,12 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     let modelMap = {};
     for(const collection of allCollections) {
         modelMap[collection.name] =
-            define(_sequelize, collection.name, collection.schema, collection.relation);
+            define(sequelize.instance, collection.name, collection.schema, collection.relation);
     }
 
     _models = {
-        collection: Collection(_sequelize, DataTypes),
-        config: Config(_sequelize, DataTypes),
+        collection: Collection(sequelize.instance, DataTypes),
+        config: Config(sequelize.instance, DataTypes),
         ...modelMap
     };
 
@@ -106,11 +106,11 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     });
     // Resolving assosiations
 
-    await _sequelize.sync();
+    await sequelize.instance.sync();
 
-    let {success, error} = await resolveMigrations(_sequelize);
+    let {success, error} = await resolveMigrations(sequelize.instance);
 
-    return {success, error, models: _models, sequelize: _sequelize};
+    return {success, error, models: _models, sequelize: sequelize.instance};
 }
 
 async function initSandBox (sandbox) {
@@ -118,9 +118,9 @@ async function initSandBox (sandbox) {
         console.log("initSandBox 1")
         try{
             let query = `SELECT "id", "key", "value" FROM "configs" AS "config" WHERE "config"."key" = 'sandBoxInitialized'`;
-            let config = await _sequelize
+            let config = await sequelize.instance
                 .query(`${query};`, { type: QueryTypes.SELECT });
-            // let config = await _sequelize.models.config.findOne({
+            // let config = await sequelize.instance.models.config.findOne({
             //     where: { key: 'sandBoxInitialized' }
             // });
 
@@ -134,7 +134,7 @@ async function initSandBox (sandbox) {
         console.log("initSandBox 4")
 
         for (const collection of (sandbox.collections || [])) {
-            let count = await _sequelize.models.collection.count({
+            let count = await sequelize.instance.models.collection.count({
                 where: {
                     name: collection.name
                 }
@@ -144,7 +144,7 @@ async function initSandBox (sandbox) {
                 continue;
             }
             let newCollection = {...collection};
-            await _sequelize.models.collection.create(newCollection);
+            await sequelize.instance.models.collection.create(newCollection);
         }
 
         console.log("initSandBox 5")
@@ -184,13 +184,13 @@ async function initSandBox (sandbox) {
                     }
                 });
 
-                await _sequelize.models[collectionName].bulkCreate(records, {
+                await sequelize.instance.models[collectionName].bulkCreate(records, {
                     ignoreDuplicates: true
                 });
             }
 
             console.log("initSandBox 8")
-            await _sequelize.models.config.create({
+            await sequelize.instance.models.config.create({
                 key: "sandBoxInitialized",
                 value: {value: true}
             });
