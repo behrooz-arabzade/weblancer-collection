@@ -13,7 +13,7 @@ module.exports = function define (sequelize, name, schema, relations) {
 
     console.log("define 1", name, schema);
     Object.values(schema).forEach(field => {
-        field.type = getDataType(schema.weblancerType);
+        field.type = getDataType(field.weblancerType);
         delete field.weblancerType;
         delete field.name;
         delete field.description;
