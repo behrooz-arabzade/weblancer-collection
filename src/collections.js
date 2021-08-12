@@ -185,10 +185,11 @@ async function initSandBox (sandbox) {
             console.log("initSandBox 9")
             return {success: true};
         } catch (error) {
+            console.log("initSandBox error 1", error)
             return {success: false, error};
         }
     } catch (error) {
-        console.log("initSandBox error", error)
+        console.log("initSandBox error 2", error)
         return {success: false, error};
     }
 }
