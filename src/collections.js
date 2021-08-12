@@ -129,6 +129,10 @@ async function initSandBox (sandbox) {
                 return {success: true};
         } catch (error) {
             console.log("initSandBox 3", error)
+            return {
+                success: false,
+                error, errorStatusCode: 500
+            }
         }
 
         console.log("initSandBox 4")
@@ -154,7 +158,7 @@ async function initSandBox (sandbox) {
         if (!success) {
             return {
                 success: false,
-                error
+                error, errorStatusCode: 500
             }
         }
 
@@ -199,11 +203,11 @@ async function initSandBox (sandbox) {
             return {success: true};
         } catch (error) {
             console.log("initSandBox error 1", error)
-            return {success: false, error};
+            return {success: false, error, errorStatusCode: 500};
         }
     } catch (error) {
         console.log("initSandBox error 2", error)
-        return {success: false, error};
+        return {success: false, error, errorStatusCode: 500};
     }
 }
 
