@@ -11,10 +11,9 @@ module.exports = function define (sequelize, name, schema, relations) {
         }
     });
 
-    schema.type = getDataType(schema.weblancerType);
-
-    console.log("define", name, schema);
+    console.log("define 1", name, schema);
     Object.values(schema).forEach(field => {
+        field.type = getDataType(schema.weblancerType);
         delete field.weblancerType;
         delete field.name;
         delete field.description;
@@ -22,6 +21,7 @@ module.exports = function define (sequelize, name, schema, relations) {
         delete field.order;
         delete field.isRelation;
     });
+    console.log("define 2", name, schema);
 
     let model = sequelize.define(name, schema);
 
