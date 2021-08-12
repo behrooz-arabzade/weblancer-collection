@@ -3,14 +3,17 @@ const getDataType = require('./datatypes/getDataType');
 module.exports = function define (sequelize, name, schema, relations) {
     let tempSchema = {...schema}
     Object.keys(tempSchema).forEach(key => {
-        if (schema[key.isRelation]) {
+        if (schema[key].isRelation) {
+            delete schema[key];
+        }
+        if (schema[key] === undefined) {
             delete schema[key];
         }
     });
 
     schema.type = getDataType(schema.weblancerType);
 
-    console.log("define", schema);
+    console.log("define", name, schema);
     Object.values(schema).forEach(field => {
         delete field.weblancerType;
         delete field.name;
