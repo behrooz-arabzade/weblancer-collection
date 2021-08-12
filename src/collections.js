@@ -133,11 +133,13 @@ async function initSandBox (sandbox) {
     console.log("initSandBox 4")
 
     for (const collection of (sandbox.collections || [])) {
-        if (_sequelize.models.collection.count({
+        let count = _sequelize.models.collection.count({
             where: {
                 name: collection.name
             }
-        }) > 0) {
+        });
+        console.log("initSandBox 4.5", collection.name, count);
+        if (count > 0) {
             continue;
         }
         let newCollection = {...collection};
