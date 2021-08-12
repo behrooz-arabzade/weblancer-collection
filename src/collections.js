@@ -169,9 +169,9 @@ async function initSandBox (sandbox) {
                 let collectionName = keys[i];
                 let records = sandbox[collectionName];
 
-                records.forEach(record => {
-                    delete record.id;
-                });
+                // records.forEach(record => {
+                //     delete record.id;
+                // });
 
                 await _sequelize.models[collectionName].bulkCreate(records, {
                     ignoreDuplicates: true
