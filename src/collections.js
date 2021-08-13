@@ -429,11 +429,19 @@ async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
         console.log("addField collectionName", collectionName);
-        collection = await _models.collection.findOne({
+        collection = _models.collection.findOne({
             where: {
                 name: 'sanaz'
             }
+        }).then((col) => {
+            console.log("addField col", col);
         });
+
+        return {
+            success: false,
+            error: "Collection not found",
+            errorStatusCode: 404
+        }
 
         if (!collection) {
             return {
