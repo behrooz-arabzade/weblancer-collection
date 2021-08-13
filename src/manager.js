@@ -56,7 +56,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
 
     let lastRevision;
     try {
-        let created = await makeMigration(newName, sequelize);
+        let created = await makeMigration(newName, sequelize, fromRev);
         console.log("makeMigration created", created);
 
         let {success, lastRevision: newLastRevision} = await runMigrations(sequelize, fromRev);

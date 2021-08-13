@@ -7,7 +7,7 @@ const _                 = require("lodash");
 
 let migrationTools = {};
 
-migrationTools.makeMigration = async (name, sequelize) =>
+migrationTools.makeMigration = async (name, sequelize, fromRev) =>
 {
     const optionDefinitions = [
         { name: 'preview', alias: 'p', type: Boolean, description: 'Show migration preview (does not change any files)' },
@@ -46,7 +46,9 @@ migrationTools.makeMigration = async (name, sequelize) =>
 
     try {
         previousState = JSON.parse(fs.readFileSync(path.join(migrationsDir, '_current.json') ));
-    } catch (e) { }
+    } catch (e) {
+        previousState.revision = fromRev - 1;
+    }
 
     let models = sequelize.models;
 

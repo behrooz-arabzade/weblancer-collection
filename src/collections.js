@@ -22,7 +22,7 @@ let _groupId;
 let _dbHost;
 let _dbPort;
 
-async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort) {
+async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort, updateing) {
     dbName = dbName.toLowerCase();
 
     _dbName = dbName;
@@ -112,7 +112,13 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 
     await _sequelize.sync();
 
-    let {success, error} = await resolveMigrations(_sequelize);
+    let success;
+    let error;
+    if (updating) {
+        let {success:s, error:e} = await resolveMigrations(_sequelize);
+        success = s;
+        error = e;
+    }
 
     _sequelize = new Sequelize(
         dbName,
@@ -148,13 +154,6 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     });
 
     await _sequelize.sync();
-
-    console.log("initCollections test");
-    await _sequelize.models.collection.findOne({
-        where: {
-            name: "sanaz"
-        }
-    });
 
     return {success, error, models: _models, sequelize: _sequelize};
 }
