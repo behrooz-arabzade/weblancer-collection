@@ -429,12 +429,13 @@ async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
         console.log("addField collectionName", collectionName);
-        collection = await models.instance.collection.findOne({
+        collection = await models.instance.collection.findAll({
             where: {
                 name: collectionName
             }
         })
 
+        collection = collection[0];
         if (!collection) {
             return {
                 success: false,
