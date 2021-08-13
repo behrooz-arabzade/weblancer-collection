@@ -38,7 +38,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
         attributes: ["id", "key", "value"]
     })
 
-    let collection = await _sequelize.models['collection'].findOne({
+    let collection = await sequelize.models.collection.findOne({
         where: {
             name: "sanaz"
         }
