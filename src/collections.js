@@ -432,9 +432,8 @@ async function addField(collectionName, name, key, type, description, options) {
         collection = await _models.collection.findOne({
             where: {
                 name: collectionName
-            },
-            attributes: ["name"]
-        })
+            }
+        });
 
         if (!collection) {
             return {
