@@ -87,7 +87,8 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 
     console.log("allCollections", allCollections.length)
     let modelMap = {};
-    for(const collection of allCollections) {
+    let newAllCollections = JSON.parse(JSON.stringify(allCollections));
+    for(const collection of newAllCollections) {
         modelMap[collection.name] =
             define(_sequelize, collection.name, collection.schema, collection.relation);
     }
@@ -122,7 +123,8 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     );
 
     modelMap = {};
-    for(const collection of allCollections) {
+    newAllCollections = JSON.parse(JSON.stringify(allCollections));
+    for(const collection of newAllCollections) {
         modelMap[collection.name] =
             define(_sequelize, collection.name, collection.schema, collection.relation);
     }
