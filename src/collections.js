@@ -441,6 +441,8 @@ async function addField(collectionName, name, key, type, description, options) {
                 errorStatusCode: 404
             }
         }
+
+        console.log("addField collection", collection);
     } catch (error) {
         return {
             success: false,
