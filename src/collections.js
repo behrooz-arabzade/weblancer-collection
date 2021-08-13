@@ -322,7 +322,7 @@ async function createCollection(name, displayName, description, groupId, metadat
 
     newCollection.schema = {
         id : {
-            type: DataTypes.BIGINT,
+            weblancerType: "number",
             unique: true,
             autoIncrement: true,
             primaryKey: true,
@@ -332,7 +332,18 @@ async function createCollection(name, displayName, description, groupId, metadat
         }
     };
 
-    await models.instance.collection.create(newCollection);
+    let newDbCollection = await models.instance.collection.create(newCollection);
+
+    let {success, error} = await updateCollections();
+
+    if (!success) {
+        await newDbCollection.destroy();
+
+        return {
+            success: false,
+            error
+        }
+    }
 
     return {
         success: true,
