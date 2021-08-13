@@ -519,6 +519,7 @@ async function addField(collectionName, name, key, type, description, options) {
     }
 
     let schema = JSON.parse(JSON.stringify(collection.schema));
+    let oldSchema = {...schema};
 
     if (schema[key]) {
         return {
@@ -541,9 +542,7 @@ async function addField(collectionName, name, key, type, description, options) {
     let {success, error} = await updateCollections();
 
     if (!success) {
-        delete schema[key];
-
-        await collection.update({schema});
+        await collection.update({schema: oldSchema});
 
         return {
             success: false,

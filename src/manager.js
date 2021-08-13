@@ -65,6 +65,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
         console.log("runMigrations lastRevision", lastRevision);
 
         if (!success) {
+            fs.rmdirSync(migrationsDir, { recursive: true });
             throw new Error("Can't migrate to database");
         }
     } catch (error) {
