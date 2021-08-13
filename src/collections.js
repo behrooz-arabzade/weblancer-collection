@@ -573,7 +573,7 @@ async function updateField(collectionName, name, key, type, description, options
         }
     }
 
-    let schema = collection.schema;
+    let schema = JSON.parse(JSON.stringify(collection.schema));
 
     if (!schema[key]) {
         return {
