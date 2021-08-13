@@ -267,7 +267,7 @@ async function initSandBox (sandbox) {
 }
 
 async function updateCollections() {
-    return await initCollections(_dbName, _dbUser, _dbPassword, _groupId, _dbHost, _dbPort);
+    return await initCollections(_dbName, _dbUser, _dbPassword, _groupId, _dbHost, _dbPort, true);
 }
 
 async function createCollection(name, displayName, description, groupId, metadata, isApp) {
