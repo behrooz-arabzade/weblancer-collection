@@ -11,7 +11,20 @@ const {DataTypes} = Sequelize;
 
 collectionManager.addWeblancerDataTypes(Sequelize);
 
-let _sequelize;
+const dbUser = process.env.DBUSER;
+const dbName = process.env.DBNAME;
+const dbPassword = process.env.DBPASSWORD;
+
+const _sequelize = new Sequelize(
+    dbName,
+    dbUser,
+    dbPassword,
+    {
+        host:  "localhost",
+        dialect: 'postgres',
+    },
+);
+
 let _models;
 
 let _dbName;
@@ -61,15 +74,6 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     }
     // Creating db if not exist
 
-    _sequelize = new Sequelize(
-        dbName,
-        dbUser,
-        dbPassword,
-        {
-            host:  dbHost || "localhost",
-            dialect: 'postgres',
-        },
-    );
     let query = "SELECT * FROM collections";
     if (groupId) {
         query = `${query} WHERE groupId = '${groupId}'`
