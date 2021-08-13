@@ -471,18 +471,11 @@ async function updateSchema(collectionName, schema) {
 async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
-        console.log("addField 1", _sequelize.models['collection'].findOne);
-        collection = await _sequelize.models['collection'].findOne({
+        collection = await _sequelize.models.collection.findOne({
             where: {
-                name: 'sanaz'
+                name: collectionName
             }
         });
-
-        return {
-            success: false,
-            error: "Collection not found",
-            errorStatusCode: 404
-        }
 
         if (!collection) {
             return {
@@ -491,8 +484,6 @@ async function addField(collectionName, name, key, type, description, options) {
                 errorStatusCode: 404
             }
         }
-
-        console.log("addField collection", collection);
     } catch (error) {
         return {
             success: false,
