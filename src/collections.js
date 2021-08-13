@@ -273,7 +273,7 @@ async function updateCollections() {
 async function createCollection(name, displayName, description, groupId, metadata, isApp) {
     let checkName = async (name, tryTime = 1) => {
         try {
-            let sameCollection = await models.instance.findOne({
+            let sameCollection = await models.instance.collection.findOne({
                 where: {
                     name
                 }
