@@ -38,6 +38,12 @@ collectionManager.resolveMigrations = async (sequelize) => {
         attributes: ["id", "key", "value"]
     })
 
+    let collection = await _sequelize.models['collection'].findOne({
+        where: {
+            name: "sanaz"
+        }
+    });
+
     console.log("config", config);
     let fromRev = config? config.value.value : 0;
 
@@ -58,9 +64,9 @@ collectionManager.resolveMigrations = async (sequelize) => {
     try {
         let created = await makeMigration(newName, sequelize);
         console.log("makeMigration created", created);
-    
+
         let {success, lastRevision: newLastRevision} = await runMigrations(sequelize, fromRev);
-    
+
         lastRevision = newLastRevision;
         console.log("runMigrations lastRevision", lastRevision);
 
