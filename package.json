@@ -1,6 +1,6 @@
 {
   "name": "weblancer-collection",
-  "version": "0.0.69-beta",
+  "version": "0.0.70-beta",
   "description": "A mini sequelize tool to connect the ui to the db setup on production with limited auto migration features  ",
   "main": "index.js",
   "scripts": {
