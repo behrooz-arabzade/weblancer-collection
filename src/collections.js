@@ -431,7 +431,7 @@ async function addField(collectionName, name, key, type, description, options) {
         console.log("addField collectionName", collectionName);
         collection = await _models.collection.findOne({
             where: {
-                name: collectionName
+                name: 'sanaz'
             }
         });
 
