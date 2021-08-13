@@ -22,7 +22,7 @@ let _groupId;
 let _dbHost;
 let _dbPort;
 
-async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort, updateing) {
+async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort, updating) {
     dbName = dbName.toLowerCase();
 
     _dbName = dbName;
