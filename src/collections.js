@@ -433,11 +433,11 @@ async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
         console.log("addField 1", _sequelize.models['collection'].findOne);
-        collection = await _sequelize.models['collection'].findOne({
-            where: {
-                name: 'sanaz'
-            }
-        });
+        let options = {};
+        options.where = {
+            name: 'sanaz'
+        };
+        collection = await _sequelize.models['collection'].findOne(options);
 
         return {
             success: false,
