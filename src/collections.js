@@ -375,7 +375,13 @@ async function updateCollection(collectionName, displayName, description, groupI
         }
     }
 
+    // let newName = collection.name;
+    // if (metadata.archive && !collection.metadata.archive) {
+    //     newName += ("_" + makeid(8));
+    // }
+
     await collection.update({
+        // name: newName,
         displayName,
         description,
         groupId,
@@ -610,7 +616,7 @@ async function updateField(collectionName, name, key, type, description, options
     if (!success) {
         schema[key] = {...oldSchemaKey};
 
-        await collection.update({schema});
+        await collection.update({schema: {...schema}});
 
         return {
             success: false,
@@ -635,6 +641,17 @@ const models = {
         return _models;
     }
 };
+
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
 
 module.exports = {
     initCollections,
