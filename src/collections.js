@@ -500,7 +500,7 @@ async function addField(collectionName, name, key, type, description, options) {
         }
     }
 
-    let schema = JSON.parse(Json.stringify(collection.schema));
+    let schema = JSON.parse(JSON.stringify(collection.schema));
 
     if (schema[key]) {
         return {
