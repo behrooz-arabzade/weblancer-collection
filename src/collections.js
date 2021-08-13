@@ -428,6 +428,7 @@ async function updateSchema(collectionName, schema) {
 async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
+        console.log("addField collectionName", collectionName);
         collection = await models.instance.collection.findOne({
             where: {
                 name: collectionName
