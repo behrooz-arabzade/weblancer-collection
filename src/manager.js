@@ -38,7 +38,8 @@ collectionManager.resolveMigrations = async (sequelize) => {
         attributes: ["id", "key", "value"]
     })
 
-    let collection = await sequelize.models.collection.findOne({
+    console.log("manager test 1");
+    await sequelize.models.collection.findOne({
         where: {
             name: "sanaz"
         }
@@ -60,6 +61,13 @@ collectionManager.resolveMigrations = async (sequelize) => {
         return false;
     }
 
+    console.log("manager test 2");
+    await sequelize.models.collection.findOne({
+        where: {
+            name: "sanaz"
+        }
+    });
+
     let lastRevision;
     try {
         let created = await makeMigration(newName, sequelize);
@@ -80,6 +88,13 @@ collectionManager.resolveMigrations = async (sequelize) => {
         }
     }
 
+    console.log("manager test 3");
+    await sequelize.models.collection.findOne({
+        where: {
+            name: "sanaz"
+        }
+    });
+
     if (config) {
         await config.update({
             value: {value: lastRevision + 1}
@@ -90,6 +105,13 @@ collectionManager.resolveMigrations = async (sequelize) => {
             value: {value: lastRevision + 1}
         });
     }
+
+    console.log("manager test 4");
+    await sequelize.models.collection.findOne({
+        where: {
+            name: "sanaz"
+        }
+    });
 
     return {
         success: true
