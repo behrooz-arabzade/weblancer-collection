@@ -428,13 +428,11 @@ async function updateSchema(collectionName, schema) {
 async function addField(collectionName, name, key, type, description, options) {
     let collection;
     try {
-        console.log("addField collectionName", collectionName);
-        collection = _models.collection.findOne({
+        console.log("addField collectionName", _models.collection);
+        collection = await _models.collection.findOne({
             where: {
                 name: 'sanaz'
             }
-        }).then((col) => {
-            console.log("addField col", col);
         });
 
         return {
