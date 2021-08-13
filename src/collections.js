@@ -11,19 +11,7 @@ const {DataTypes} = Sequelize;
 
 collectionManager.addWeblancerDataTypes(Sequelize);
 
-const dbUser = process.env.DBUSER;
-const dbName = process.env.DBNAME;
-const dbPassword = process.env.DBPASSWORD;
-
-const _sequelize = new Sequelize(
-    dbName,
-    dbUser,
-    dbPassword,
-    {
-        host:  "localhost",
-        dialect: 'postgres',
-    },
-);
+let _sequelize;
 
 let _models;
 
@@ -79,6 +67,16 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         query = `${query} WHERE groupId = '${groupId}'`
     }
 
+    _sequelize = new Sequelize(
+        dbName,
+        dbUser,
+        dbPassword,
+        {
+            host:  "localhost",
+            dialect: 'postgres',
+        },
+    );
+
     let allCollections = [];
     try {
         allCollections = await _sequelize
@@ -111,9 +109,48 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     });
     // Resolving assosiations
 
+    let {success, error} = await resolveMigrations(_sequelize);
+
+    _sequelize = new Sequelize(
+        dbName,
+        dbUser,
+        dbPassword,
+        {
+            host:  "localhost",
+            dialect: 'postgres',
+        },
+    );
+
+    modelMap = {};
+    for(const collection of allCollections) {
+        modelMap[collection.name] =
+            define(_sequelize, collection.name, collection.schema, collection.relation);
+    }
+
+    _models = {
+        collection: Collection(_sequelize, DataTypes),
+        config: Config(_sequelize, DataTypes),
+        ...modelMap
+    };
+
+    // Resolving assosiations
+    allModels = {};
+    Object.values(_models).forEach(model => {
+        allModels[model.name] = model;
+    });
+    Object.values(_models).forEach(model => {
+        if (model.associate)
+            model.associate(allModels);
+    });
+
     await _sequelize.sync();
 
-    let {success, error} = await resolveMigrations(_sequelize);
+    console.log("initCollections test");
+    await _sequelize.models.collection.findOne({
+        where: {
+            name: "sanaz"
+        }
+    });
 
     return {success, error, models: _models, sequelize: _sequelize};
 }

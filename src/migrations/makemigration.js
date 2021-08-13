@@ -4,7 +4,6 @@ let pathConfig = require('./lib/pathconfig');
 const fs                = require("fs");
 const path              = require("path");
 const _                 = require("lodash");
-const {cloneDeep} = require("lodash");
 
 let migrationTools = {};
 
@@ -49,7 +48,7 @@ migrationTools.makeMigration = async (name, sequelize) =>
         previousState = JSON.parse(fs.readFileSync(path.join(migrationsDir, '_current.json') ));
     } catch (e) { }
 
-    let models = cloneDeep(sequelize.models);
+    let models = sequelize.models;
 
     currentState.tables = migrate.reverseModels(sequelize, models);
 
