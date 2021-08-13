@@ -113,21 +113,8 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
 
     await _sequelize.sync();
 
-
-    console.log("initCollections 1");
-    await _sequelize.models.collection.findOne({
-        where: {
-            name: "sanaz"
-        }
-    });
     let {success, error} = await resolveMigrations(_sequelize);
 
-    console.log("initCollections 2");
-    await _sequelize.models.collection.findOne({
-        where: {
-            name: "sanaz"
-        }
-    });
     return {success, error, models: _models, sequelize: _sequelize};
 }
 

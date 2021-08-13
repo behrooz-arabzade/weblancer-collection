@@ -38,13 +38,6 @@ collectionManager.resolveMigrations = async (sequelize) => {
         attributes: ["id", "key", "value"]
     })
 
-    console.log("manager test 1");
-    await sequelize.models.collection.findOne({
-        where: {
-            name: "sanaz"
-        }
-    });
-
     console.log("config", config);
     let fromRev = config? config.value.value : 0;
 
@@ -61,7 +54,7 @@ collectionManager.resolveMigrations = async (sequelize) => {
         return false;
     }
 
-    console.log("manager test 2");
+    console.log("manager test 1");
     await sequelize.models.collection.findOne({
         where: {
             name: "sanaz"
