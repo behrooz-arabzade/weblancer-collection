@@ -110,6 +110,8 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     });
     // Resolving assosiations
 
+    await _sequelize.sync();
+
     let {success, error} = await resolveMigrations(_sequelize);
 
     _sequelize = new Sequelize(
