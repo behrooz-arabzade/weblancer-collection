@@ -336,7 +336,7 @@ async function createCollection(name, displayName, description, groupId, metadat
 
     return {
         success: true,
-        collections: await models.instance.collection.findAll().toJSON()
+        collections: await models.instance.collection.findAll()
     };
 }
 
