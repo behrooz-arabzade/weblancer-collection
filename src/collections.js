@@ -1,6 +1,6 @@
 const { Client } = require('pg')
 const Sequelize = require('sequelize');
-const { QueryTypes } = require('sequelize');
+const { QueryTypes, Op } = require('sequelize');
 const getDataType = require('./datatypes/getDataType');
 const define = require('./define');
 const { resolveMigrations } = require('./manager');
@@ -73,7 +73,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         dbPassword,
         {
             host:  "localhost",
-            dialect: 'postgres',
+            dialect: 'postgres'
         },
     );
 
@@ -127,6 +127,35 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         {
             host:  "localhost",
             dialect: 'postgres',
+            operatorsAliases: {
+                $or: Op.or,
+                $and: Op.and,
+                $gt: Op.gt,
+                $eq: Op.eq,
+                $ne: Op.ne,
+                $is: Op.is,
+                $not: Op.not,
+                $gte: Op.gte,
+                $lt: Op.lt,
+                $lte: Op.lte,
+                $between: Op.between,
+                $notBetween: Op.notBetween,
+                $in: Op.in,
+                $notIn: Op.notIn,
+                $like: Op.like,
+                $notLike: Op.notLike,
+                $startsWith: Op.startsWith,
+                $endsWith: Op.endsWith,
+                $substring: Op.substring,
+                $iLike: Op.iLike,
+                $notILike: Op.notILike,
+                $regexp: Op.regexp,
+                $notRegexp: Op.notRegexp,
+                $iRegexp: Op.iRegexp,
+                $notIRegexpt: Op.notIRegexp,
+                $any: Op.any,
+                $col: Op.col
+            }
         },
     );
 
