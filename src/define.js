@@ -25,8 +25,15 @@ module.exports = function define (sequelize, name, schema, relations) {
             };
         }
 
+        if (field.tempFields) {
+            field.tempFields.forEach(k => {
+                delete field[k];
+            })
+        }
+
         delete field.weblancerType;
         delete field.name;
+        delete field.isPrimary;
         delete field.description;
         delete field.options;
         delete field.order;
