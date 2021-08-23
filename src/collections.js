@@ -23,6 +23,7 @@ let _dbHost;
 let _dbPort;
 
 async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbPort, updating) {
+    console.log("initCollections 1")
     dbName = dbName.toLowerCase();
 
     _dbName = dbName;
@@ -33,6 +34,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     _dbPort = dbPort;
 
     // Creating db if not exist
+    console.log("initCollections 2")
     try {
         let pgConfig = {
             user: dbUser,
@@ -53,8 +55,11 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
                 .query(`CREATE DATABASE ${dbName}`);
         }
 
+        console.log("initCollections 3")
         await pgClient.end();
+        console.log("initCollections 4")
     } catch (error) {
+        console.log("initCollections 5")
         return {
             success: false,
             error: "Can't connect to the database"
@@ -62,11 +67,13 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
     }
     // Creating db if not exist
 
+    console.log("initCollections 6")
     let query = "SELECT * FROM collections";
     if (groupId) {
         query = `${query} WHERE groupId = '${groupId}'`
     }
 
+    console.log("initCollections 7")
     _sequelize = new Sequelize(
         dbName,
         dbUser,
@@ -76,6 +83,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
             dialect: 'postgres'
         },
     );
+    console.log("initCollections 8")
 
     let allCollections = [];
     try {
@@ -85,6 +93,7 @@ async function initCollections (dbName, dbUser, dbPassword, groupId, dbHost, dbP
         console.log("error", err)
     }
 
+    console.log("initCollections 9")
     console.log("allCollections", allCollections.length)
     let modelMap = {};
     let newAllCollections = JSON.parse(JSON.stringify(allCollections));
